@@ -6,6 +6,7 @@ import { PodcastsModule } from './podcast/podcasts.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Podcast } from './podcast/entities/podcast.entity';
 import { Episode } from './podcast/entities/episode.entity';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { Episode } from './podcast/entities/episode.entity';
     }),
     GraphQLModule.forRoot({ autoSchemaFile: true }),
     PodcastsModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
