@@ -41,7 +41,7 @@ export class User {
   @Field(type => String)
   password: string;
 
-  // @Bug sqlite not support enum
+  // @Bugfix sqlite : not support type:"enum". use "simple-enum"
   @Column({ type: 'simple-enum', enum: UserRole })
   @Field(type => UserRole)
   @IsEnum(UserRole)

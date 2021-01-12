@@ -5,14 +5,17 @@ import {
   CreateAccountInput,
   CreateAccountOutput,
 } from './dtos/create-account.dto';
+import { LoginInput, LoginOutput } from './dtos/login.dto';
 import { UserProfileOutput } from './dtos/user-profile.dto';
 import { User } from './entities/user.entity';
+import { JwtService } from 'src/jwt/jwt.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly users: Repository<User>,
+    private readonly jwtService: JwtService,
   ) {}
 
   async findOneUserById(id: number): Promise<UserProfileOutput> {
@@ -45,6 +48,27 @@ export class UsersService {
       return { ok: true };
     } catch (e) {
       return { ok: false, error: 'could not create account' };
+    }
+  }
+
+  async login(loginInput: LoginInput): Promise<LoginOutput> {
+    const { email, password } = loginInput;
+    console.log('login :', email, password);
+    try {
+      const user = await this.users.findOne({ email });
+      if (!user) {
+        return { ok: false, error: 'user not found' };
+      }
+
+      const isPwdOk = await user.checkPassword(password);
+      if (!isPwdOk) {
+        return { ok: false, error: 'wrong password' };
+      }
+
+      const token = this.jwtService.sign(user.id);
+      return { ok: true, token };
+    } catch (error) {
+      return { ok: false, error };
     }
   }
 }
