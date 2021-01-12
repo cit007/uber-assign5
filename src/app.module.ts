@@ -8,6 +8,8 @@ import { Podcast } from './podcast/entities/podcast.entity';
 import { Episode } from './podcast/entities/episode.entity';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { JwtModule } from './jwt/jwt.module';
+import { User } from './users/entities/user.entity';
 
 @Module({
   imports: [
@@ -16,12 +18,16 @@ import { AuthModule } from './auth/auth.module';
       database: 'db.sqlite3',
       synchronize: true,
       logging: true,
-      entities: [Podcast, Episode],
+      entities: [Podcast, Episode, User],
     }),
     GraphQLModule.forRoot({ autoSchemaFile: true }),
+    JwtModule.forRoot({
+      privateKey: 'test_key',
+    }),
     PodcastsModule,
     UsersModule,
     AuthModule,
+    JwtModule,
   ],
   controllers: [AppController],
   providers: [AppService],
